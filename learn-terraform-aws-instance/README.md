@@ -50,3 +50,54 @@ resource "aws_instance" "example" {
   depends_on = [aws_s3_bucket.example]
 }
 ```
+
+## Provisioner
+
+- To create a new key
+  - `ssh-keygen -t rsa -f ~/.ssh/terraform`
+- Give it the right permission
+  - `chmod 400 ~/.ssh/terraform`
+- remote-exec
+  - Once that connection is successful, the `remote-exec `provisioner will run on the remote host to install, update, and start nginx in this example.
+  ```
+    provider "aws" {
+        profile = "default"
+        region  = "us-west-2"
+    }
+
+    resource "aws_key_pair" "example" {
+        key_name   = "examplekey"
+        public_key = file("~/.ssh/terraform.pub")
+    }
+
+    resource "aws_instance" "example" {
+        key_name      = aws_key_pair.example.key_name
+        ami           = "ami-04590e7389a6e577c"
+        instance_type = "t2.micro"
+
+        connection {
+            type        = "ssh"
+            user        = "ec2-user"
+            private_key = file("~/.ssh/terraform")
+            host        = self.public_ip
+        }
+
+        provisioner "remote-exec" {
+            inline = [
+            "sudo amazon-linux-extras enable nginx1.12",
+            "sudo yum -y install nginx",
+            "sudo systemctl start nginx"
+            ]
+        }
+    }
+
+  ```
+  - Failed Provisioners and Tainted Resources
+    - If a resource successfully creates but fails during provisioning, Terraform will error and mark the resource as "tainted". 
+    - When you generate your next execution plan, Terraform will not attempt to restart provisioning on the same resource because it isn't guaranteed to be safe. Instead, Terraform will remove any tainted resources and create new resources, attempting to provision them again after creation.
+
+  - Manually Tainting Resources
+    - `terraform taint resource.id`
+      - The correct resource and ID to taint this resource would be `terraform taint aws_instance.example`.
+  - Destroy provisioners
+    - If you need to execute something before the instance is shut down.
