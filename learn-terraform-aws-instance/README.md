@@ -101,3 +101,46 @@ resource "aws_instance" "example" {
       - The correct resource and ID to taint this resource would be `terraform taint aws_instance.example`.
   - Destroy provisioners
     - If you need to execute something before the instance is shut down.
+
+## Variables
+- Using Variables in a Configuration
+  ```
+  provider "aws" {
+    region = var.region
+  }
+  ```
+  - Variable file can be named with anything, since Terraform loads all files in the directory ending in `.tf`.
+- ### Assigning variables
+  - Command-line flags
+    - `terraform apply -var 'region=us-east-1'`
+  - From a file
+    - With name `terraform.tfvars` or `*.auto.tfvars`
+    - Or specify with `-var-file`
+      - `$ terraform apply -var-file="secret.tfvars" -var-file="production.tfvars"`
+  - From environment variables
+    - in the form of `TF_VAR_<name>`
+  - Variable defaults
+    - If no value is assigned to a variable via any of these methods and the variable has a `default` key in its declaration, that value will be used for the variable.
+- ### More types
+  - Lists
+    ```
+    # Declare implicitly by using brackets []
+    variable "cidrs" { default = [] }
+    ```
+  - Maps
+    ```
+    variable "amis" {
+    type = "map"
+        default = {
+            "us-east-1" = "ami-b374d5a5"
+            "us-west-2" = "ami-4b32be2b"
+        }
+    }
+    ```
+    - To use it
+      ```
+      resource "aws_instance" "example" {
+        ami           = var.amis[var.region]
+        instance_type = "t2.micro"
+      }
+      ```
