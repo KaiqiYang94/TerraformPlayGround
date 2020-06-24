@@ -1,4 +1,7 @@
-# Build intra
+# Get Started - AWS
+[Official doc](https://learn.hashicorp.com/terraform/getting-started/intro)
+
+## Build intra
 
 Before executing, configured the local aws profile `personal` as 
 
@@ -22,13 +25,13 @@ Default output format [None]:
   - `terraform show`
 
 
-# Resource Dependencies
+## Resource Dependencies
 
-## Implicit dependencies
+### Implicit dependencies
 `instance = aws_instance.example.id` refs to `resource "aws_instance" "example" {...}`
 - it also indicates the order of creation.
 
-## Explicit dependencies
+### Explicit dependencies
 - `depends_on`
 ```
 # New resource for the S3 bucket our application will use.
@@ -51,7 +54,7 @@ resource "aws_instance" "example" {
 }
 ```
 
-## Provisioner
+### Provisioner
 
 - To create a new key
   - `ssh-keygen -t rsa -f ~/.ssh/terraform`
@@ -102,7 +105,7 @@ resource "aws_instance" "example" {
   - Destroy provisioners
     - If you need to execute something before the instance is shut down.
 
-## Variables
+### Variables
 - Using Variables in a Configuration
   ```
   provider "aws" {
@@ -145,7 +148,7 @@ resource "aws_instance" "example" {
       }
       ```
 
-## Output variable
+### Output variable
 This data is outputted when `apply` is called, and can be queried using the `terraform output` command.
 ```
 $ terraform apply
