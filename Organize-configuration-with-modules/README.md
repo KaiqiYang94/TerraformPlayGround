@@ -1,5 +1,7 @@
 # Organize configuration with modules
 
+[Doc](https://learn.hashicorp.com/terraform/modules/using-modules)
+
 ## What are modules for?
 - Organize configuration 
 - Encapsulate configuration 
