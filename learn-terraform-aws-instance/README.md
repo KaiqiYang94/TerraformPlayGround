@@ -16,3 +16,5 @@ Default output format [None]:
   - `terraform validate`
 - To run
   - `terraform apply`
+- To check the state
+  - `terraform show`
