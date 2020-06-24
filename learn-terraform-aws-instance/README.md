@@ -144,3 +144,21 @@ resource "aws_instance" "example" {
         instance_type = "t2.micro"
       }
       ```
+
+## Output variable
+This data is outputted when `apply` is called, and can be queried using the `terraform output` command.
+```
+$ terraform apply
+...
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+  ip = 50.17.232.209
+```
+`terraform output`
+```
+$ terraform output ip
+50.17.232.209
+```
