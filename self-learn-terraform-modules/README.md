@@ -21,3 +21,24 @@ Modules can either be loaded from the local filesystem, or a remote source.
 
 ## Module best practices
 In many ways, Terraform modules are similar to the concepts of libraries, packages, or modules found in most programming languages, and provide many of the same benefits. 
+
+
+## Create a module
+### Module structure
+Terraform treats any local directory referenced in the source argument of a module block as a module. A typical file structure for a new module is:
+```console
+$ tree minimal-module/
+.
+├── LICENSE
+├── README.md
+├── main.tf
+├── variables.tf
+├── outputs.tf
+```
+
+## `provider` in modules
+You will notice that there is no provider block in this configuration. When Terraform processes a module block, it will inherit the provider from the enclosing configuration. Because of this, we recommend that you do not include provider blocks in modules.
+
+## Install a module
+- `terraform get`
+- Note: When installing a remote module, Terraform will download it into the `.terraform` directory in your configuration's root directory. When installing a local module, Terraform will instead refer directly to the source directory. Because of this, Terraform will automatically notice changes to local modules without having to re-run `terraform init` or `terraform get`.
